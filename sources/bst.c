@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "bst.h"
-#include "../../adaptive-queue/headers/queue.h"
+#include "../../linear-ds/adaptive-queue/headers/queue.h"
 
 BST bst_new()
 {
@@ -162,5 +162,15 @@ void bst_levelorder_traversal(BST* tree){
             queue_add(q, node->right, &res);
         }
         printf("%d\t", node->data);
+    }
+}
+
+uint32_t bst_height(const BST *tree){
+    if(bst_count(tree) == 0){
+        return 0;
+    }else{
+        uint32_t lefth = bst_height(tree->root->left);
+        uint32_t righth = bst_height(tree->root->right);
+        return lefth > righth ? lefth + 1 : righth + 1;
     }
 }

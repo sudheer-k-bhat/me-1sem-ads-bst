@@ -74,6 +74,19 @@ void test_levelorder_traversal(){
     bst_levelorder_traversal(tree);
 }
 
+void test_height(){
+    BST bst = bst_new();
+    BST* tree = &bst;
+    tree = bst_add(tree, 50);
+    tree = bst_add(tree, 20);
+    tree = bst_add(tree, 90);
+    tree = bst_add(tree, 40);
+    tree = bst_add(tree, 60);
+    tree = bst_add(tree, 10);
+    tree = bst_add(tree, 35);
+    assert(bst_height(tree) == 4);
+}
+
 int main(){
     test_new();
     test_add();
@@ -81,5 +94,6 @@ int main(){
     test_preorder();
     test_postorder();
     test_levelorder_traversal();
+    test_height();
     return 0;
 }

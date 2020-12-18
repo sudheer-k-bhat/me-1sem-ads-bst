@@ -22,3 +22,4 @@ void bst_inorder(BST* tree);
 void bst_preorder(BST* tree);
 void bst_postorder(BST* tree);
 void bst_levelorder_traversal(BST* tree);
+uint32_t bst_height(const BST *tree);

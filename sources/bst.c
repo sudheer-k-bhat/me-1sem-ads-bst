@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "bst.h"
-#include "../../linear-ds/adaptive-queue/headers/queue.h"
+#include "../../../linear-ds/adaptive-queue/headers/queue.h"
 
 BST bst_new()
 {
@@ -49,6 +49,14 @@ BST* bst_add(BST* tree, int32_t element){
             parent->right = new_node;
         }
         ++tree->mass;
+    }
+    return tree;
+}
+
+BST* bst_add_elements(BST* tree, int32_t elements[], uint32_t el_len){
+    for (uint32_t i = 0; i < el_len; i++)
+    {
+        tree = bst_add(tree, elements[i]);
     }
     return tree;
 }
@@ -165,12 +173,89 @@ void bst_levelorder_traversal(BST* tree){
     }
 }
 
-uint32_t bst_height(const BST *tree){
-    if(bst_count(tree) == 0){
+static uint32_t _bst_height(const TreeNode *tree){
+    if(tree == NULL){
         return 0;
     }else{
-        uint32_t lefth = bst_height(tree->root->left);
-        uint32_t righth = bst_height(tree->root->right);
+        uint32_t lefth = _bst_height(tree->left);
+        uint32_t righth = _bst_height(tree->right);
         return lefth > righth ? lefth + 1 : righth + 1;
     }
+}
+
+uint32_t bst_height(const BST *tree){
+    assert(tree != NULL);
+    return _bst_height(tree->root);
+}
+
+uint32_t _bst_count_leaves(const TreeNode *tree, uint32_t count){
+    assert(tree != NULL);
+    if(tree->left == NULL && tree->right == NULL){
+        return count + 1;
+    }else{
+        count += _bst_count_leaves(tree->left, count);
+        count += _bst_count_leaves(tree->right, count);
+    }
+    return count;
+}
+
+uint32_t bst_count_leaves(const BST *tree){
+    assert(tree != NULL);
+    uint32_t count = 0;
+    return _bst_count_leaves(tree->root, count);
+}
+
+static int32_t _max(TreeNode* tree){
+    assert(tree != NULL);
+    int32_t val = tree->data;
+    //Is left tree traversal needed?
+    int32_t lval = _max(tree->left);
+    int32_t rval = _max(tree->right);
+    if(lval > val){
+        val = lval;
+    }else if(rval > val){
+        val = rval;
+    }
+    return val;
+}
+
+static int32_t _min(TreeNode* tree){
+    assert(tree != NULL);
+    int32_t val = tree->data;
+    //Is left tree traversal needed?
+    int32_t lval = _min(tree->left);
+    int32_t rval = _min(tree->right);
+    if(lval < val){
+        val = lval;
+    }else if(rval < val){
+        val = rval;
+    }
+    return val;
+}
+
+int32_t bst_max(BST* tree){
+    assert(tree != NULL);
+    return _max(tree->root);
+}
+
+int32_t bst_min(BST* tree){
+    assert(tree != NULL);
+    return _min(tree->root);
+}
+
+void bst_ascending(BST* tree){
+    bst_inorder(tree);
+}
+
+static void _inorder_d(TreeNode* node){
+    if(node){
+        _inorder_d(node->right);
+        printf("%d\t", node->data);
+        _inorder_d(node->left);
+    }
+}
+
+void bst_descending(BST* tree){
+    assert(tree != NULL);
+    _inorder_d(tree->root);
 }
